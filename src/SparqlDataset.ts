@@ -1,6 +1,6 @@
-import * as Factory from "@rdf-esm/data-model";
-import Dataset from "@rdfjs/dataset";
+import * as Factory from "@rdfjs/data-model";
 import * as RDF from "rdf-js";
+import DatasetCore from "@rdfjs/dataset/DatasetCore";
 
 interface SparqlEnpoint {
     query(s: string): Promise<any>;
@@ -8,13 +8,13 @@ interface SparqlEnpoint {
 
 
 export default class SparqlDataset implements RDF.DatasetCore {
-    local = Dataset.dataset([]);
+    local:RDF.DatasetCore = new DatasetCore<RDF.Quad>([]);
     
     constructor(public endpoint: SparqlEnpoint) {
     }
 
     get size() {
-        return 0;
+        return this.local.size;
     }
 
     getQuery() {
@@ -23,7 +23,19 @@ export default class SparqlDataset implements RDF.DatasetCore {
 
     populate() {
         const query = this.getQuery();
-        this.endpoint.query(query);
+        return this.endpoint.query(query).then((results) => 
+        {
+            for (const r of results) {
+                const s: RDF.Quad_Subject = r['?s' as any];
+                const p = r['?p' as any];
+                const o = r['?o' as any];
+                const g = r['?g' as any];
+                const quad = Factory.quad(s,p,o,g);
+                this.local.add(quad); 
+            }
+            return results;
+
+        });
     }
 
     add(quad: RDF.Quad): this {

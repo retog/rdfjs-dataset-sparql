@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/retog/rdfjs-dataset-sparql#readme",
   "dependencies": {
-    "@rdf-esm/data-model": "0.5.1",
+    "@rdfjs/data-model": "1.1.2",
     "@rdfjs/dataset": "1.0.1",
     "@types/memdown": "^3.0.0",
     "@types/rdf-js": "3.0.0",

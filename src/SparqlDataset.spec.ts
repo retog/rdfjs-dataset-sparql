@@ -12,7 +12,14 @@ import {
 const db = memdown();
 const store = new RdfStore(db);
 
-beforeAll(async () => {
+const sparqlEngineInstance = new SparqlEngine(store);
+
+
+const sparqlDataset = new SparqlDataset({
+    query: (q) => sparqlEngineInstance.query(q, undefined, undefined)
+});
+
+beforeAll(() => {
     const quads = [];
     for (let i = 0; i < 20; i++) {
         quads.push(
@@ -24,16 +31,17 @@ beforeAll(async () => {
             )
         );
     }
-    await store.put(quads, undefined, undefined);
-    console.log("Put succeded.");
-});
+    return store.put(quads, undefined, undefined).then(() => {
+        return sparqlDataset.populate();
+    });
+},60000);
 
-const sparqlEngineInstance = new SparqlEngine(store);
 
-const sparqlDataset = new SparqlDataset(sparqlEngineInstance);
 
-test('should return false given external link', () => {
-    expect(sparqlDataset == null).toBe(false)
+
+
+test('size of dataset', () => {
+    expect(sparqlDataset.size).toBe(20)
 })
 
 test('should return true given internal link', () => {
