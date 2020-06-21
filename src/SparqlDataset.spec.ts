@@ -44,6 +44,21 @@ test('size of dataset', () => {
     expect(sparqlDataset.size).toBe(20)
 })
 
+test('insert statement is being sent', () => {
+    let query = "";
+    const monitoredInstance = new SparqlDataset({
+        query: (q) => {
+            query = q;
+            return Promise.resolve();
+        }
+    });
+    monitoredInstance.add(quad(
+        namedNode("http://ex.com/s"),
+        namedNode("http://ex.com/p"),
+        namedNode("http://ex.com/o")))
+    expect(query).toMatch(/INSERT/);
+})
+
 test('should return true given internal link', () => {
     expect(sparqlDataset != null).toBe(true)
 })

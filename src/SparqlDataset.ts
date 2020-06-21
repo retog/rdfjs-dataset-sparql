@@ -1,6 +1,7 @@
 import * as Factory from "@rdfjs/data-model";
 import * as RDF from "rdf-js";
 import DatasetCore from "@rdfjs/dataset/DatasetCore";
+import { sparql } from '@tpluscode/rdf-string'
 
 interface SparqlEnpoint {
     query(s: string): Promise<any>;
@@ -39,7 +40,8 @@ export default class SparqlDataset implements RDF.DatasetCore {
     }
 
     add(quad: RDF.Quad): this {
-        //TODO implement
+        this.local.add(quad);
+        this.endpoint.query(sparql`INSERT { GRAPH ${quad.graph} { ${quad.subject} ${quad.predicate} ${quad.object} }} `.toString());
         return this;
     }
 

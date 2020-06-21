@@ -43,8 +43,9 @@
   "dependencies": {
     "@rdfjs/data-model": "1.1.2",
     "@rdfjs/dataset": "1.0.1",
+    "@tpluscode/rdf-string": "^0.2.15",
     "@types/memdown": "^3.0.0",
-    "@types/rdf-js": "3.0.0",
+    "@types/rdf-js": "3.0.1",
     "@types/rdfjs__dataset": "1.0.2",
     "memdown": "^5.1.0",
     "quadstore": "6.0.1"
