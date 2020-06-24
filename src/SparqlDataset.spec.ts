@@ -5,6 +5,7 @@ import memdown from 'memdown'
 import {
     quad,
     namedNode,
+    blankNode,
     literal,
     defaultGraph
 } from '@rdfjs/data-model'
@@ -52,11 +53,13 @@ test('insert statement is being sent', () => {
             return Promise.resolve();
         }
     });
+    const s = 'b1'
     monitoredInstance.add(quad(
-        namedNode("http://ex.com/s"),
+        blankNode(s),
         namedNode("http://ex.com/p"),
-        namedNode("http://ex.com/o")))
+        literal("The object")))
     expect(query).toMatch(/INSERT/);
+    expect(query).toMatch(s);
 })
 
 test('should return true given internal link', () => {
